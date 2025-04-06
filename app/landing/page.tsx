@@ -120,8 +120,8 @@ export default function LandingPage() {
                   <p className="font-medium">Aditya Kumar, Mohit Lal</p>
                 </div>
                 <div>
-                  <p className="text-sm text-slate-500">Roll Numbers</p>
-                  <p className="font-medium">32 and 27</p>
+                  <p className="text-sm text-slate-500">Registration Numbers</p>
+                  <p className="font-medium">12413688 and 12403942</p>
                 </div>
                 <div className="md:col-span-2">
                   <p className="text-sm text-slate-500">Section</p>

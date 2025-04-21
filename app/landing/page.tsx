@@ -133,15 +133,15 @@ export default function LandingPage() {
         </Card>
       </div>
 
-      {/* Footer */}
-<footer role="contentinfo" className="bg-gradient-to-r from-pink-500 to-orange-400 text-white py-8">
-  <div className="container mx-auto px-4 text-center">
-    <p className="mb-2">© 2025 Symptom Journal. All rights reserved.</p>
-    <p className="text-sm text-pink-100">Designed and developed with care for chronic condition management.</p>
-  </div>
-</footer>
-</div>
-)
+  {/* Footer */}
+      <footer className="bg-gradient-to-r from-purple-600 to-blue-500 text-white py-8">
+        <div className="container mx-auto px-4 text-center">
+          <p className="mb-2">© 2025 Symptom Journal. All rights reserved.</p>
+          <p className="text-sm text-purple-100">Designed and developed with care for chronic condition management.</p>
+        </div>
+      </footer>
+    </div>
+  )
 }
 
 

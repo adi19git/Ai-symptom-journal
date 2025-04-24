@@ -1,9 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import {
-  Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
-} from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -19,11 +17,9 @@ export default function AIChat({ symptoms }: { symptoms: Symptom[] }) {
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
     setMessages(getAIMessages())
-    inputRef.current?.focus()
   }, [])
 
   useEffect(() => {
@@ -50,6 +46,7 @@ export default function AIChat({ symptoms }: { symptoms: Symptom[] }) {
     setIsLoading(true)
 
     try {
+      // Get AI response
       const aiResponse = await analyzeSymptoms(input, symptoms)
 
       const aiMessage: AIMessage = {
@@ -62,12 +59,12 @@ export default function AIChat({ symptoms }: { symptoms: Symptom[] }) {
       setMessages((prev) => [...prev, aiMessage])
       saveAIMessage(aiMessage)
     } catch (error) {
-      console.error("AI error:", error)
+      console.error("Error getting AI response:", error)
 
       const errorMessage: AIMessage = {
         id: uuidv4(),
         role: "assistant",
-        content: "⚠️ Sorry, I couldn't analyze that. Please try again later.",
+        content: "I'm sorry, I had trouble analyzing your symptoms. Please try again later.",
         timestamp: Date.now(),
       }
 
@@ -106,22 +103,26 @@ export default function AIChat({ symptoms }: { symptoms: Symptom[] }) {
                 key={message.id}
                 className={cn(
                   "flex items-start gap-3 rounded-lg p-3",
-                  message.role === "user" ? "bg-muted/50 self-end" : "bg-purple-50 self-start"
+                  message.role === "user" ? "bg-muted/50" : "bg-purple-50",
                 )}
               >
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback
-                    className={message.role === "user" ? "bg-muted-foreground text-background" : "bg-purple-500 text-white"}
-                  >
-                    {message.role === "user" ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
-                  </AvatarFallback>
-                </Avatar>
+                {message.role === "user" ? (
+                  <Avatar className="h-8 w-8 border">
+                    <AvatarFallback className="bg-muted-foreground text-background">
+                      <User className="h-4 w-4" />
+                    </AvatarFallback>
+                  </Avatar>
+                ) : (
+                  <Avatar className="h-8 w-8 border-0 bg-gradient-to-br from-purple-500 to-blue-500 text-white">
+                    <AvatarFallback>
+                      <Bot className="h-4 w-4" />
+                    </AvatarFallback>
+                  </Avatar>
+                )}
 
                 <div className="flex-1 space-y-1">
-                  <div className="font-medium">
-                    {message.role === "user" ? "You" : "AI Assistant"}
-                  </div>
-                  <div className="text-sm whitespace-pre-wrap">{message.content}</div>
+                  <div className="font-medium">{message.role === "user" ? "You" : "AI Assistant"}</div>
+                  <div className="text-sm">{message.content}</div>
                   <div className="text-xs text-muted-foreground">
                     {new Date(message.timestamp).toLocaleTimeString()}
                   </div>
@@ -129,19 +130,6 @@ export default function AIChat({ symptoms }: { symptoms: Symptom[] }) {
               </div>
             ))
           )}
-
-          {/* Typing indicator */}
-          {isLoading && (
-            <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
-              <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-purple-500 text-white">
-                  <Bot className="h-4 w-4 animate-bounce" />
-                </AvatarFallback>
-              </Avatar>
-              <div className="text-sm text-muted-foreground italic">Analyzing symptoms...</div>
-            </div>
-          )}
-
           <div ref={messagesEndRef} />
         </div>
       </CardContent>
@@ -149,10 +137,8 @@ export default function AIChat({ symptoms }: { symptoms: Symptom[] }) {
       <CardFooter className="p-4 border-t">
         <div className="flex w-full items-center space-x-2">
           <Textarea
-            ref={inputRef}
             placeholder="Ask about your symptoms..."
             value={input}
-            disabled={isLoading}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
